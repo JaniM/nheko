@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Config.h"
 #include "MainWindow.h"
 
 #include <QLayout>
@@ -38,7 +39,8 @@ MainWindow::MainWindow(QWidget *parent)
 	resize(1066, 600);  // 16:9 ratio
 	setMinimumSize(QSize(950, 600));
 
-	QFont font("Open Sans", 12);
+	QFont font("Open Sans");
+	font.setPixelSize(conf::fontSize);
 	font.setStyleStrategy(QFont::PreferAntialias);
 	setFont(font);
 
@@ -74,10 +76,7 @@ MainWindow::MainWindow(QWidget *parent)
 		this,
 		SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
-	connect(client_.data(),
-		SIGNAL(initialSyncCompleted(const SyncResponse &)),
-		this,
-		SLOT(removeOverlayProgressBar()));
+	connect(chat_page_, SIGNAL(contentLoaded()), this, SLOT(removeOverlayProgressBar()));
 
 	connect(client_.data(),
 		SIGNAL(loginSuccess(QString, QString, QString)),
